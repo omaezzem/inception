@@ -1,0 +1,28 @@
+FROM debian:bookworm
+
+RUN apt-get update && apt-get install -y \
+    php8.2 \
+    php8.2-fpm \
+    php8.2-mysql \
+    php8.2-curl \
+    php8.2-gd \
+    php8.2-xml \
+    php8.2-mbstring \
+    php8.2-zip \
+    wget \
+    mariadb-client \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /var/www/html
+
+RUN wget https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz \
+    && tar -xzf /tmp/wordpress.tar.gz -C /tmp \
+    && cp -r /tmp/wordpress/* /var/www/html/ \
+    && rm -rf /tmp/wordpress /tmp/wordpress.tar.gz
+
+COPY tools/wp.sh /usr/local/bin/wp.sh
+RUN chmod +x /usr/local/bin/wp.sh
+
+RUN sed -i 's|^listen = .*|listen = 9000|' /etc/php/8.2/fpm/pool.d/www.conf
+
+ENTRYPOINT ["/usr/local/bin/wp.sh"]
