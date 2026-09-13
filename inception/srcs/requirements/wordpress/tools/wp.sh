@@ -19,7 +19,7 @@ done
 
 echo "MariaDB is ready!"
 
-if [ ! -f /var/www/html/wordpress/wp-config.php ]; then
+if [ ! -f /var/www/html/wp-config.php ]; then
 
     wp config create \
         --dbname="$MYSQL_DATABASE" \
@@ -43,7 +43,7 @@ if [ ! -f /var/www/html/wordpress/wp-config.php ]; then
         --user_pass="$WP_PASS" \
         --allow-root
 
-    chown -R www-data:www-data /var/www/html/wordpress
+    chown -R www-data:www-data /var/www/html
 fi
 
 exec php-fpm8.2 -F

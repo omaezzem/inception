@@ -2,38 +2,20 @@ NAME = inception
 
 COMPOSE = docker compose -f srcs/docker-compose.yml
 
-all: up
-
-build:
-	$(COMPOSE) build
-
-up:
-	$(COMPOSE) up -d
-
-down:
-	$(COMPOSE) down
-
-start:
-	$(COMPOSE) start
-
-stop:
-	$(COMPOSE) stop
-
-restart:
-	$(COMPOSE) restart
-
-logs:
-	$(COMPOSE) logs
-
-ps:
-	$(COMPOSE) ps
+all:
+	sudo mkdir -p /home/omaezzem/data/mariadb
+	sudo mkdir -p /home/omaezzem/data/wordpress
+	$(COMPOSE) up --build -d
 
 clean:
-	$(COMPOSE) down --volumes --remove-orphans
+	$(COMPOSE) stop
 
 fclean: clean
-	docker system prune -af
+	$(COMPOSE) rm -f
 
-re: fclean all
+down: fclean
+	$(COMPOSE) down --rmi local -v
 
-.PHONY: all build up down start stop restart logs ps clean fclean re
+re: down all
+
+.PHONY: all clean fclean down re

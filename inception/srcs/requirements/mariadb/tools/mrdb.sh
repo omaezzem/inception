@@ -13,9 +13,9 @@ until mariadb-admin ping --silent; do
     sleep 1
 done
 
-mariadb -e "CREATE DATABASE IF NOT EXISTS wordpress;"
-mariadb -e "CREATE USER IF NOT EXISTS 'wpuser'@'%' IDENTIFIED BY 'wppassword';"
-mariadb -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'%';"
+mariadb -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;"
+mariadb -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+mariadb -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';"
 mariadb -e "FLUSH PRIVILEGES;"
 
 mysqladmin shutdown
