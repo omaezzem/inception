@@ -20,9 +20,9 @@ RUN wget https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz \
     && cp -r /tmp/wordpress/* /var/www/html/ \
     && rm -rf /tmp/wordpress /tmp/wordpress.tar.gz
 
+RUN sed -i 's|^listen = .*|listen = 9000|' /etc/php/8.2/fpm/pool.d/www.conf
+    
 COPY tools/wp.sh /usr/local/bin/wp.sh
 RUN chmod +x /usr/local/bin/wp.sh
-
-RUN sed -i 's|^listen = .*|listen = 9000|' /etc/php/8.2/fpm/pool.d/www.conf
 
 ENTRYPOINT ["/usr/local/bin/wp.sh"]

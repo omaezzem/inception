@@ -1,87 +1,87 @@
-services:  # hna kan3arfo les services/containers dyal l-project
+services:
 
-  mariadb:  # service dyal MariaDB / database
+  mariadb:
 
-    build:  # kaygol l-Docker Compose kifach ybuildi image
-      context: ./requirements/mariadb  # dossier fin kayn Dockerfile dyal MariaDB
+    build:
+      context: ./requirements/mariadb 
 
-    container_name: mariadb  # smiya li ghadi n3tiw l-container
+    container_name: mariadb
 
-    env_file:  # kayjib environment variables men file externe
-      - .env  # file li fih passwords, database name, user, etc.
+    env_file:
+      - .env
 
-    volumes:  # kan3arfo volumes li ghadi ymountiha l-container
-      - mariadb_data:/var/lib/mysql  # mariadb_data = smiya dyal volume; /var/lib/mysql = fin MariaDB kat7et data
+    volumes:
+      - mariadb_data:/var/lib/mysql
 
-    networks:  # kanحدد network li ghadi ydkhol liha l-container
-      - inception  # MariaDB ghadi tkun f network smitha inception
+    networks:
+      - inception 
 
-    restart: always  # ila container t7bes/crasha, Docker y3awed ystartiha
-
-
-  wordpress:  # service dyal WordPress / PHP-FPM
-
-    build:  # kaybuildi image dyal WordPress
-      context: ./requirements/wordpress  # dossier fin kayn Dockerfile dyal WordPress
-
-    container_name: wordpress  # smiya dyal WordPress container
-
-    env_file:  # kayjib environment variables men .env
-      - .env  # nafs .env li fih configuration dyal project
-
-    volumes:  # volumes li ghadi nmountiwha f WordPress
-      - wordpress_data:/var/www/html  # volume dyal WordPress files → /var/www/html dakhel container
-
-    networks:  # network li ghadi ydkhol liha WordPress
-      - inception  # WordPress ghadi ykoun f nafs network m3a MariaDB w Nginx
-
-    depends_on:  # kayحدد dependency dyal WordPress
-      - mariadb  # Compose ybda MariaDB qbel WordPress
-
-    restart: always  # ila WordPress t7bes/crasha, Docker y3awed ystartiha
+    restart: on-failure
 
 
-  nginx:  # service dyal Nginx / web server
+  wordpress:
 
-    build:  # kaybuildi image dyal Nginx
-      context: ./requirements/nginx  # dossier fin kayn Dockerfile dyal Nginx
+    build:
+      context: ./requirements/wordpress
 
-    container_name: nginx  # smiya dyal Nginx container
+    container_name: wordpress
 
-    ports:  # ports li ghadi nربطو bin host w container
-      - "443:443"  # host port 443 → Nginx container port 443 (HTTPS)
+    env_file:
+      - .env
 
-    volumes:  # volumes li ghadi nmountiwha f Nginx
-      - wordpress_data:/var/www/html  # Nginx kaychof nafs WordPress files li kaychofhom WordPress
+    volumes: 
+      - wordpress_data:/var/www/html 
 
-    networks:  # network li ghadi ydkhol liha Nginx
-      - inception  # Nginx ghadi ykoun f nafs network m3a WordPress w MariaDB
+    networks: 
+      - inception 
 
-    depends_on:  # kayحدد dependency dyal Nginx
-      - wordpress  # Compose ybda WordPress qbel Nginx
+    depends_on:
+      - mariadb 
 
-    restart: always  # ila Nginx t7bes/crasha, Docker y3awed ystartiha
-
-
-volumes:  # hna kan3arfo les volumes li st3mlna fo9
-
-  mariadb_data:  # hadi smiya 7na li اخترناها للـ volume dyal MariaDB
-    driver: local  # Docker ghadi yst3mel local volume driver
-    driver_opts:  # options bach nconfiguriw kifach had volume ykhdem
-      type: none  # ma kanst3mlouch filesystem type khas
-      device: /home/omaezzem/data/mariadb  # dossier الحقيقي f host fin ghadi ttsjjel data dyal MariaDB
-      o: bind  # kaydir bind mount bin dossier dyal host w volume
+    restart: on-failure
 
 
-  wordpress_data:  # hadi smiya 7na li اخترناها للـ volume dyal WordPress
-    driver: local  # Docker ghadi yst3mel local volume driver
-    driver_opts:  # options dyal had volume
-      type: none  # filesystem type none
-      device: /home/omaezzem/data/wordpress  # dossier الحقيقي f host fin ghadi ttsjjel WordPress files
-      o: bind  # kayربط dossier dyal host m3a volume
+  nginx:
+
+    build:
+      context: ./requirements/nginx
+
+    container_name: nginx
+
+    ports:
+      - "443:443"
+
+    volumes:
+      - wordpress_data:/var/www/html
+
+    networks:
+      - inception 
+
+    depends_on:
+      - wordpress 
+
+    restart: on-failure 
 
 
-networks:  # hna kan3arfo Docker networks
+volumes: 
 
-  inception:  # smiya 7na li 3tina l-network
-    driver: bridge  # Docker ghadi yst3mel bridge network bach containers y9dro yhedro m3a b3diyathom
+  mariadb_data: 
+    driver: local
+    driver_opts: 
+      type: none 
+      device: /home/omaezzem/data/mariadb 
+      o: bind
+
+
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/omaezzem/data/wordpress
+      o: bind
+
+
+networks:
+
+  inception:
+    driver: bridge

@@ -4,41 +4,46 @@ set -e
 
 mkdir -p /run/php
 
-if [ ! -f /var/www/html/wp-config.php ]; then
+cd /var/www/html
 
-    cat > /var/www/html/wp-config.php <<EOF
-<?php
+until mysqladmin ping \
+    -h mariadb \
+    -P 3306 \
+    -u"$MYSQL_USER" \
+    -p"$MYSQL_PASSWORD" \
+    --silent
+do
+    echo "Wait until MariaDB starts..."
+    sleep 1
+done
 
-define('DB_NAME', '${MYSQL_DATABASE}');
-define('DB_USER', '${MYSQL_USER}');
-define('DB_PASSWORD', '${MYSQL_PASSWORD}');
-define('DB_HOST', 'mariadb:3306');
+echo "MariaDB is ready!"
 
-define('DB_CHARSET', 'utf8');
-define('DB_COLLATE', '');
+if [ ! -f /var/www/html/wordpress/wp-config.php ]; then
 
-define('AUTH_KEY',         'change-this-key');
-define('SECURE_AUTH_KEY',  'change-this-key');
-define('LOGGED_IN_KEY',    'change-this-key');
-define('NONCE_KEY',        'change-this-key');
-define('AUTH_SALT',        'change-this-salt');
-define('SECURE_AUTH_SALT', 'change-this-salt');
-define('LOGGED_IN_SALT',   'change-this-salt');
-define('NONCE_SALT',       'change-this-salt');
+    wp config create \
+        --dbname="$MYSQL_DATABASE" \
+        --dbuser="$MYSQL_USER" \
+        --dbpass="$MYSQL_PASSWORD" \
+        --dbhost="mariadb:3306" \
+        --allow-root
 
-\$table_prefix = 'wp_';
+    wp core install \
+        --url="$URL" \
+        --title="Inception" \
+        --admin_user="$WP_AD_USER" \
+        --admin_password="$WP_ADMIN_PASSWORD" \
+        --admin_email="$WP_USER_EMAIL" \
+        --allow-root
 
-define('WP_DEBUG', false);
+    wp user create \
+        "$WP_USER" \
+        "$WP_EMAIL" \
+        --role=subscriber \
+        --user_pass="$WP_PASS" \
+        --allow-root
 
-if ( ! defined('ABSPATH') ) {
-    define('ABSPATH', __DIR__ . '/');
-}
-
-require_once ABSPATH . 'wp-settings.php';
-EOF
-
+    chown -R www-data:www-data /var/www/html/wordpress
 fi
-
-chown -R www-data:www-data /var/www/html
 
 exec php-fpm8.2 -F
