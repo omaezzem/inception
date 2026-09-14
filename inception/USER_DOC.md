@@ -38,15 +38,12 @@ Log in to the admin panel with the WordPress admin username and password (see be
 Credentials are never hard-coded in the code — they're kept in two places:
 
 - **`.env` file** (project root): non-sensitive settings such as the domain name, database name, and usernames.
-- **`secrets/` folder**: password files (database root password, database user password, WordPress admin password, WordPress user password). Each file contains a single password.
 
 To find a specific credential, open the matching file in `secrets/` (e.g. `wp_admin_password.txt` for the WordPress admin password).
 
 To change a password:
-1. Edit the corresponding file in `secrets/`.
+1. Edit the corresponding .env.
 2. Restart the stack: `make down` then `make`.
-
-Never commit real passwords to Git — the `secrets/` files should stay out of version control (check `.gitignore`).
 
 ## 5. Checking that services are running correctly
 

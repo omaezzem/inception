@@ -22,9 +22,7 @@ cd inception
 ### Configuration files
 
 - **`.env`** (project root): non-sensitive configuration read by Docker Compose — domain name, database name, WordPress site title/usernames, etc. Copy the example file if one is provided and fill in your own values:
-  ```bash
-  cp .env.example .env
-  ```
+  
 
  Each file must contain only the password/value, nothing else. These files are referenced as Docker secrets in `docker-compose.yml` and must **never** be committed to Git.
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e #Ila chi command f script failed, wa9ef script
+set -e 
 
 mkdir -p /run/php
 

@@ -6,10 +6,6 @@ RUN apt-get update && \
 
 COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
 
-#OpenSSL kaygenerate self-signed certificate.
-#don't encrypt the private key with another password.
-#certificate valid for 365 days.
-
 RUN mkdir -p /etc/nginx/ssl && \
     openssl req -x509 -nodes -days 365 \ 
     -newkey rsa:2048 \
@@ -17,5 +13,4 @@ RUN mkdir -p /etc/nginx/ssl && \
     -out /etc/nginx/ssl/inception.crt \
     -subj "/CN=omaezzem.42.fr"
 
-#khali nginx fl foreground 
 CMD ["nginx", "-g", "daemon off;"]
