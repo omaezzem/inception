@@ -18,4 +18,4 @@ RUN mkdir -p /etc/nginx/ssl && \
     -subj "/CN=omaezzem.42.fr"
 
 #khali nginx fl foreground 
-nginx -g "daemon off;"
+CMD ["nginx", "-g", "daemon off;"]

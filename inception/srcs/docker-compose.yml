@@ -69,9 +69,8 @@ volumes:
     driver: local
     driver_opts: 
       type: none 
-      device: /home/omaezzem/data/mariadb 
+      device: /home/omaezzem/data/mariadb
       o: bind
-
 
   wordpress_data:
     driver: local
@@ -79,7 +78,6 @@ volumes:
       type: none
       device: /home/omaezzem/data/wordpress
       o: bind
-
 
 networks:
 

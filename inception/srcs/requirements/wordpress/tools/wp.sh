@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -e #Ila chi command f script failed, wa9ef script
 
 mkdir -p /run/php
 
@@ -13,7 +13,7 @@ until mysqladmin ping \
     -p"$MYSQL_PASSWORD" \
     --silent
 do
-    echo "Wait until MariaDB starts..."
+    echo "wait until mariadb starts"
     sleep 1
 done
 

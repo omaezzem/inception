@@ -20,4 +20,5 @@ mariadb -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';" #GR
 
 #mariadb-admin howa tool kay3tik control 3la MariaDB server.
 
-wait
+mariadb-admin   shutdown 
+exec mysqld_safe --datadir=/var/lib/mysql
