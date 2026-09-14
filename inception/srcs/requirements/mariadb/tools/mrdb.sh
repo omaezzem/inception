@@ -1,23 +1,23 @@
 #!/bin/bash
 
-mkdir -p /run/mysqld #create mariadb runtime directory
-chown -R mysql:mysql /run/mysqld #give mariadbpermission to use it 
-
-if [ ! -d "/var/lib/mysql/mysql" ]; then #If MariaDB's system directory does not exist, do the following.
-    mariadb-install-db --user=mysql --datadir=/var/lib/mysql # Initialize MariaDB using the mysql user and put the database data in /var/lib/mysql.
+# mariadb needs a place to store its actual database data. this place is /var/lib/mysql
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+    mariadb-install-db --user=mysql --datadir=/var/lib/mysql #"MariaDB, prepare your database files inside /var/lib/mysql, and make mysql the Linux user associated with those files."
 fi
 
-mysqld_safe --datadir=/var/lib/mysql & # Start MariaDB using /var/lib/mysql as its data directory.  & mean Run this command in the background.
+mysqld_safe --datadir=/var/lib/mysql & # & katgol: "Start MariaDB f background, w khallini nkemel l-script."
 
-until mariadb-admin ping --silent; do
-    sleep 1
+until mariadb-admin ping --silent; do #--silent ghir kaykhelli ping ma y3amarch terminal b messages kol mara.
+    sleep 1  # ping one mariadb to see if his ready .
 done
 
-mariadb -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;"
+mariadb -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;" #e mean execute this sql commande
 mariadb -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
-mariadb -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';"
-mariadb -e "FLUSH PRIVILEGES;"
+mariadb -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';" #GRANT it mean 3ti l permissions 
 
-mysqladmin shutdown
+# % kat3ni: "Had user y9der yconnecta men ay host."
+#because mariadb created by 'username'@'host' so use user@% mean this user can connect men ayi host 
 
-exec mysqld_safe --datadir=/var/lib/mysql
+#mariadb-admin howa tool kay3tik control 3la MariaDB server.
+
+wait

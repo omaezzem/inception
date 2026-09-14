@@ -1,6 +1,6 @@
 NAME = inception
 
-COMPOSE = docker compose -f srcs/docker-compose.yml
+COMPOSE = sudo docker compose -f srcs/docker-compose.yml
 
 all:
 	sudo mkdir -p /home/omaezzem/data/mariadb
